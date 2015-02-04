@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    .num {
+      color: red;
+      font-size: 100px;
+    }
+    .box {
+      width: 50px;
+      height: 50px;
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="js-widget-a">
+    <div class="js-click num">0</div>
+  </div>
+  <br>
+  <div class="js-widget-b">
+    <div class="js-click box"></div>
+  </div>
+
+  <!-- bower:js -->
+  <script src="../../bower_components/jquery/dist/jquery.js"></script>
+  <!-- endbower -->
+  <script src="../../dist/mr.min.js"></script>
+  <script>
+    window.$MR.Const.baseDir = 'js';
+    window.$MR.Const.moduleDir = 'mod';
+    window.$MR.Const.modulePrefix = 'mod';
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Extensions to ignore
+*.log
+
+# OS or editor files
+.DS_Store
+.idea/
+Thumbs.db
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Excluding files from project
+.tmp/
+# dist/

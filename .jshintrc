@@ -1,0 +1,16 @@
+{
+  "eqeqeq": true,
+  "latedef": true,
+  "noarg": true,
+  "undef": true,
+  "unused": true,
+  "strict": true,
+  "browser": true,
+  "devel": true,
+  "jquery": true,
+  "globals": {
+    "module": false,
+    "require": false,
+    "define": false
+  }
+}
