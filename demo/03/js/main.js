@@ -1,15 +1,14 @@
 ;(function($, $MR) {
     'use strict';
 
-    var Utils = $MR.Utils,
-        _init;
+    var _init;
 
     _init = function(Mod03, Mod04) {
         var mod03,
             mod04;
 
-        mod03 = Utils.applyModule('.js-widget-a', Mod03.View);
-        mod04 = Utils.applyModule('.js-widget-b', Mod04);
+        mod03 = $MR.applyModule('.js-widget-a', Mod03.View);
+        mod04 = $MR.applyModule('.js-widget-b', Mod04);
     };
 
     $(function() {

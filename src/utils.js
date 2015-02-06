@@ -17,9 +17,10 @@ window.$MR.Utils = (function($, $MR) {
         setStorageItem,
         uniqueId,
         extend,
-        applyModule,
         template,
         where;
+
+    _idCounter = 0;
 
     ua = function() {
         var userAgent = window.navigator.userAgent.toLowerCase(),
@@ -247,30 +248,6 @@ window.$MR.Utils = (function($, $MR) {
         return Constructor;
     };
 
-    applyModule = function(el, TargetModule, config) {
-        var _instances = [];
-
-        if (TargetModule) {
-            if (el) {
-                $(el).each(function() {
-                    _instances.push(new TargetModule($.extend({
-                        el: this,
-                        instances: _instances
-                    }, config)));
-                });
-            } else {
-                _instances.push(new TargetModule($.extend({
-                    instances: _instances
-                }, config)));
-            }
-        } else {
-            throw new Error('Failed applyModule for "' + el +'". Module was not found.');
-        }
-
-        return _instances;
-    };
-
-
     template = function (tmpl, data) {
         var _settings, _methods;
 
@@ -364,7 +341,6 @@ window.$MR.Utils = (function($, $MR) {
         setStorageItem: setStorageItem,
         uniqueId: uniqueId,
         extend: extend,
-        applyModule: applyModule,
         template: template,
         where: where
     };

@@ -9,7 +9,8 @@ window.$MR = (function($) {
         Define,
         getModulePath,
         define,
-        require;
+        require,
+        applyModule;
 
     if (typeof $ === 'undefined') {
         throw new Error('mr.js depends on jQuery.');
@@ -134,8 +135,33 @@ window.$MR = (function($) {
         return Module[name];
     };
 
+    /**
+     * [applyModule description]
+     * @param  {[type]} el           [description]
+     * @param  {[type]} TargetModule [description]
+     * @param  {[type]} config       [description]
+     * @return {[type]}              [description]
+     */
+    applyModule = function(el, TargetModule, config) {
+        var _instances = [];
+
+        if (el && TargetModule ) {
+            $(el).each(function() {
+                _instances.push(new TargetModule($.extend({
+                    el: this,
+                    instances: _instances
+                }, config)));
+            });
+        } else {
+            throw new Error('Failed applyModule for "' + el +'". el or Module was not found.');
+        }
+
+        return _instances;
+    };
+
     return {
         require: require,
-        define: define
+        define: define,
+        applyModule: applyModule
     };
 }(window.jQuery));

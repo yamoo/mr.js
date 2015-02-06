@@ -9,12 +9,18 @@ window.$MR.View = (function($, $MR) {
 
     View = $MR.Utils.extend($MR.Bone, {
 
+        defaults: {},
+
+        events: {},
+
         _create: function(options) {
             this.el = options.el;
             this.$el = $(this.el);
             this.settings = $.extend({}, this.defaults, options, this.$el.data('options'));
             this._init();
         },
+
+        _init: function() {},
 
         _mkCache: function() {
             this.settings.cache = {
@@ -42,10 +48,6 @@ window.$MR.View = (function($, $MR) {
             }
 
             return cache.$[selector];
-        },
-
-        _bind: function(fn) {
-            return $.proxy(this[fn], this);
         },
 
         _delegateEvent: function(events, target, swc) {

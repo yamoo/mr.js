@@ -9,7 +9,8 @@ window.$MR = (function($) {
         Define,
         getModulePath,
         define,
-        require;
+        require,
+        applyModule;
 
     if (typeof $ === 'undefined') {
         throw new Error('mr.js depends on jQuery.');
@@ -134,9 +135,34 @@ window.$MR = (function($) {
         return Module[name];
     };
 
+    /**
+     * [applyModule description]
+     * @param  {[type]} el           [description]
+     * @param  {[type]} TargetModule [description]
+     * @param  {[type]} config       [description]
+     * @return {[type]}              [description]
+     */
+    applyModule = function(el, TargetModule, config) {
+        var _instances = [];
+
+        if (el && TargetModule ) {
+            $(el).each(function() {
+                _instances.push(new TargetModule($.extend({
+                    el: this,
+                    instances: _instances
+                }, config)));
+            });
+        } else {
+            throw new Error('Failed applyModule for "' + el +'". el or Module was not found.');
+        }
+
+        return _instances;
+    };
+
     return {
         require: require,
-        define: define
+        define: define,
+        applyModule: applyModule
     };
 }(window.jQuery));
 /**
@@ -172,9 +198,10 @@ window.$MR.Utils = (function($, $MR) {
         setStorageItem,
         uniqueId,
         extend,
-        applyModule,
         template,
         where;
+
+    _idCounter = 0;
 
     ua = function() {
         var userAgent = window.navigator.userAgent.toLowerCase(),
@@ -267,7 +294,7 @@ window.$MR.Utils = (function($, $MR) {
         } else {
             _regexp = _name + '\\=(.*?)(?:\\;|$)';
         }
-
+console.log(_regexp)
         _cookie = decodeURIComponent(document.cookie).match(new RegExp(_regexp));
 
         if (_cookie && _cookie.length > 1) {
@@ -402,30 +429,6 @@ window.$MR.Utils = (function($, $MR) {
         return Constructor;
     };
 
-    applyModule = function(el, TargetModule, config) {
-        var _instances = [];
-
-        if (TargetModule) {
-            if (el) {
-                $(el).each(function() {
-                    _instances.push(new TargetModule($.extend({
-                        el: this,
-                        instances: _instances
-                    }, config)));
-                });
-            } else {
-                _instances.push(new TargetModule($.extend({
-                    instances: _instances
-                }, config)));
-            }
-        } else {
-            throw new Error('Failed applyModule for "' + el +'". Module was not found.');
-        }
-
-        return _instances;
-    };
-
-
     template = function (tmpl, data) {
         var _settings, _methods;
 
@@ -519,7 +522,6 @@ window.$MR.Utils = (function($, $MR) {
         setStorageItem: setStorageItem,
         uniqueId: uniqueId,
         extend: extend,
-        applyModule: applyModule,
         template: template,
         where: where
     };
@@ -542,6 +544,10 @@ window.$MR.Bone = (function($, $MR) {
     };
 
     Bone.prototype = {
+        _bind: function(fn) {
+            return $.proxy(this[fn], this);
+        },
+
         on: function(event, callback, target) {
             var tbl = this.__listeningTbl;
 
@@ -639,12 +645,20 @@ window.$MR.messanger = new window.$MR.Bone();
  * @return {[type]}        [description]
  */
 window.$MR.Model = (function($, $MR) {
-	'use strict';
+    'use strict';
 
     var Model;
 
     Model = $MR.Utils.extend($MR.Bone, {
-        _create: function(options) {}
+
+        defaults: {},
+
+        _create: function(options) {
+            this.settings = $.extend({}, this.defaults, options);
+            this._init();
+        },
+
+        _init: function() {}
     });
 
     return Model;
@@ -662,12 +676,18 @@ window.$MR.View = (function($, $MR) {
 
     View = $MR.Utils.extend($MR.Bone, {
 
+        defaults: {},
+
+        events: {},
+
         _create: function(options) {
             this.el = options.el;
             this.$el = $(this.el);
             this.settings = $.extend({}, this.defaults, options, this.$el.data('options'));
             this._init();
         },
+
+        _init: function() {},
 
         _mkCache: function() {
             this.settings.cache = {
@@ -695,10 +715,6 @@ window.$MR.View = (function($, $MR) {
             }
 
             return cache.$[selector];
-        },
-
-        _bind: function(fn) {
-            return $.proxy(this[fn], this);
         },
 
         _delegateEvent: function(events, target, swc) {

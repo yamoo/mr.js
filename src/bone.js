@@ -16,6 +16,10 @@ window.$MR.Bone = (function($, $MR) {
     };
 
     Bone.prototype = {
+        _bind: function(fn) {
+            return $.proxy(this[fn], this);
+        },
+
         on: function(event, callback, target) {
             var tbl = this.__listeningTbl;
 
