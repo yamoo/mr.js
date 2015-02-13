@@ -22,7 +22,6 @@ window.$MR.View = (function($, $MR) {
         },
 
         _init: function() {
-            this._delegate();
         },
 
         _mkCache: function() {
