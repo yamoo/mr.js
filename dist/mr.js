@@ -294,7 +294,7 @@ window.$MR.Utils = (function($, $MR) {
         } else {
             _regexp = _name + '\\=(.*?)(?:\\;|$)';
         }
-console.log(_regexp)
+
         _cookie = decodeURIComponent(document.cookie).match(new RegExp(_regexp));
 
         if (_cookie && _cookie.length > 1) {
@@ -683,11 +683,13 @@ window.$MR.View = (function($, $MR) {
         _create: function(options) {
             this.el = options.el;
             this.$el = $(this.el);
+            this.model = options.model;
             this.settings = $.extend({}, this.defaults, options, this.$el.data('options'));
             this._init();
         },
 
-        _init: function() {},
+        _init: function() {
+        },
 
         _mkCache: function() {
             this.settings.cache = {
@@ -727,7 +729,7 @@ window.$MR.View = (function($, $MR) {
                 var args = eventName.split(' '),
                     argsLen = args.length,
                     _handler = self._bind(handler),
-                    isHasChildElement = tagElemsRegexp.test(args[argsLen-1].toLowerCase());
+                    isHasChildElement = (argsLen > 1) && tagElemsRegexp.test(args[argsLen-1].toLowerCase());
 
                 if (isHasChildElement) {
                     args = [args.slice(0, argsLen-1).join(' '), args[argsLen-1]];
